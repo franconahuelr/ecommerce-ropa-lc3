@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import {auth} from '../Firebase/Firebase'
 import {useNavigate} from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import { Form } from 'react-bootstrap'
 
 export const Login = () => {
 
@@ -11,14 +12,14 @@ export const Login = () => {
     const [email, setEmail]=useState('');
     const [password, setPassword]=useState('');
 
-    const [errorMsg, setErrorMsg]=useState('');
-    const [successMsg, setSuccessMsg]=useState('');
+    const [errormsg, setErrorMsg]=useState('');
+    const [successmsg, setSuccessMsg]=useState('');
 
-    const handleLogin=(e)=>{
+    const handleLogin= async (e)=>{
         e.preventDefault();
         // console.log(email, password);
-        signInWithEmailAndPassword(auth, email,password).then(()=>{
-            setSuccessMsg('Login Successfull. You will now automatically get redirected to Home page');
+        await signInWithEmailAndPassword(auth, email,password).then(()=>{
+            setSuccessMsg('Ingreso exitoso, seras redirigido a la pagina principal');
             setEmail('');
             setPassword('');
             setErrorMsg('');
@@ -29,39 +30,41 @@ export const Login = () => {
         }).catch(error=>setErrorMsg(error.message));
     }
 
+    
     return (
         <div className='container'>
-            <Link to='/' className='link'>Home</Link>
-            <br></br>
-            <br></br>
-            <h1>Login</h1>
-            <hr></hr>
-            {successMsg&&<>
-                <div className='success-msg'>{successMsg}</div>
-                <br></br>
-            </>}
-            <form className='form-group' autoComplete="off"
-            onSubmit={handleLogin}>               
-                <label>Email</label>
-                <input type="email" className='form-control' required
-                onChange={(e)=>setEmail(e.target.value)} value={email}></input>
-                <br></br>
-                <label>Password</label>
-                <input type="password" className='form-control' required
-                onChange={(e)=>setPassword(e.target.value)} value={password}></input>
-                <br></br>
-                <div className='btn-box'>
-                    <span>Don't have an account SignUp
-                    <Link to="/signup" className='link'> Here</Link></span>
-                    <button type="submit" className='btn btn-success btn-md'>LOGIN</button>
-                </div>
-            </form>
-            {errorMsg&&<>
-                <br></br>
-                <div className='error-msg'>{errorMsg}</div>                
-            </>}
+        <Form onSubmit={handleLogin}>
+        <br /><br />
+        <h1>Ingreso</h1>
+        <br />
+        <hr />
+        {successmsg&&<>
+            <div className="success-msg">{successmsg}</div>
+        </>}
+        
+        <br />
+      <Form.Group className="mb-3" controlId="formGroupEmail">
+        <Form.Label>Email</Form.Label>
+        <Form.Control type="email" placeholder="Email" onChange={(e)=>setEmail(e.target.value)} value={email} />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formGroupPassword">
+        <Form.Label>Contraseña</Form.Label>
+        <Form.Control type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} value={password} />
+      </Form.Group>
+      <br/>
+        <div className='btn-box'>
+            <span>Si no tienes una cuenta has click
+            <Link to="/signup" className='link'> Aqui </Link>para registrarte</span>
+            <button type="submit" className='btn btn-success btn-md'>Ingresar</button>
         </div>
+    </Form>
+          {errormsg&&<>
+              <br></br>
+              <div className='error-msg'>{errormsg}</div>                
+          </>}
+  </div>
     )
 }
+        
 
 export default Login;

@@ -2,7 +2,6 @@ import React,{ useState } from 'react'
 import { auth } from '../Firebase/Firebase'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
-//import { collection, setDoc, doc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { fs } from '../Firebase/Firebase';
 import { doc, setDoc } from 'firebase/firestore';
