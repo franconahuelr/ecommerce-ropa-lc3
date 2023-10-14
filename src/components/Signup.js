@@ -18,15 +18,17 @@ export const Signup = () => {
     const [errormsg, setErrormsg]=useState('');
     const [successmsg, setSuccessmsg]=useState('');
     
-    const addUserToFirestore = async (userId, email) => {
+    const addUserToFirestore = async (userId, email, role) => {
       const userRef = doc(fs, 'users', userId);
     
       try {
         await setDoc(userRef, {
-          email: email,
+          email, 
+          role
+ 
         });
     
-        console.log('Usuario anadido a Firestore.');
+        console.log('Usuario añadido a Firestore.');
       } catch (error) {
         console.error(error);
       }
@@ -35,8 +37,9 @@ export const Signup = () => {
     const handleSignup= async (e) => {
       e.preventDefault();
         
+      const userRole = 'user'
         //createUserWithEmailAndPassword(auth,fullName.value,email.value,password.value);
-      await createUserWithEmailAndPassword(auth, email, password).then((userCredential)=>{
+      await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential)=>{
       const user = userCredential.user;
       const userId = user.uid;
 
@@ -50,12 +53,12 @@ export const Signup = () => {
           setSuccessmsg('');
           history('/login');
           },3000)
-            return addUserToFirestore(userId, email).then(() => {
-               console.log('User registered successfully and added to Firestore.');
-            })
-            .catch((error) => {
-              console.error('Registration error:', error.message);
-            });
+            try {
+          await addUserToFirestore(userId, email, userRole);
+          console.log('User registered successfully and added to Firestore.');
+        } catch (error) {
+          console.error('Registration error:', error.message);
+        }
          
       }).catch ((error)=>{
         if (error.code === "auth/email-already-in-use") {

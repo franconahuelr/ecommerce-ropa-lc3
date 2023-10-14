@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel } from 'react-bootstrap';
+import './CarouselImages.css';
 
 export const CarouselImages = () => {
 
@@ -12,6 +13,7 @@ export const CarouselImages = () => {
                 className="d-block m-auto"
                 src="https://acdn.mitiendanube.com/stores/001/029/315/products/pizza-time1-dfc67727b9474296dd16747890035712-640-0.webp"
                 alt="Segunda imagen"
+              
                 
               />
               <Carousel.Caption>

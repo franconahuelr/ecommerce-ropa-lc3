@@ -5,21 +5,22 @@ import {Products} from "../Products"
 import {auth, fs} from "../../Firebase/Firebase";
 import {getDoc, doc} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import {CarouselImages} from "./CarouselImages";
+import {CarouselImages} from "./CarouselImages/CarouselImages";
 
 
 export const Home = () => {
   // Getting the current user function
   function GetCurrentUser() {
     const [user, setUser] = useState(null);
-
+  
     useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          getDoc(doc(fs, 'users', user.uid))
+      const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+        if (authUser) {
+          getDoc(doc(fs, 'users', authUser.uid))
             .then((snapshot) => {
               if (snapshot.exists()) {
-                setUser(snapshot.data().email);
+                const userData = snapshot.data();
+                setUser({ email: userData.email, role: userData.role });
               } else {
                 setUser(null);
               }
@@ -31,11 +32,11 @@ export const Home = () => {
           setUser(null);
         }
       });
-
+  
       // Cleanup function
       return () => unsubscribe();
     }, []);
-
+  
     return user;
   }
 
