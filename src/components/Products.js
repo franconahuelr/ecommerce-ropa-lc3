@@ -1,12 +1,18 @@
-import React from 'react'
-
-export const Products = () => {
-    return (
+const Products = ({ products }) => {
+  return (
+    <div>
+      <div>
+        <img src={products.img} alt={products.title} />
         <div>
-            individual Product
-            individual product 2
+          <h3>
+            {products.title} - ${products.price}
+          </h3>
+          <p>{products.description}</p>
         </div>
-    )
-}
+        {/* <a href="">AddToCart</a> */}
+      </div>
+    </div>
+  );
+};
 
 export default Products;

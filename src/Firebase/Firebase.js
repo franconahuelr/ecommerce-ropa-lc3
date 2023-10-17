@@ -1,24 +1,23 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAo5c6VdjWX9Dy44Hs91W-TnO65kEoQRUk",
-  authDomain: "productos-ropa.firebaseapp.com",
-  projectId: "productos-ropa",
-  storageBucket: "productos-ropa.appspot.com",
-  messagingSenderId: "522743447138",
-  appId: "1:522743447138:web:70df1d39d6312e4b9d1b3b"
+  apiKey: "AIzaSyAB-5Tk60hliGQ8iU6_kgro7fcCVzLF9YU",
+  authDomain: "ecommerceropa-c09cb.firebaseapp.com",
+  projectId: "ecommerceropa-c09cb",
+  storageBucket: "ecommerceropa-c09cb.appspot.com",
+  messagingSenderId: "596634183078",
+  appId: "1:596634183078:web:de2279b9f30a98de679b67",
 };
 
 // Initialize Firebase
 const App = initializeApp(firebaseConfig);
 
 const auth = getAuth(App);
-const fs = getFirestore(App);
+const db = getFirestore(App);
 const storage = getStorage(App);
 
-export {auth, fs, storage, App}
+export { auth, db, storage, App };
