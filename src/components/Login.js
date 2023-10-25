@@ -1,45 +1,35 @@
-import React,{useState} from 'react'
-import {Link} from 'react-router-dom'
-import {auth} from '../Firebase/Firebase'
-import {useNavigate} from 'react-router-dom'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import React from 'react'
 import { Form } from 'react-bootstrap'
+import { Authentication } from './Authentication'
+import { Link } from 'react-router-dom'
+import {Navbar } from './Navbar/Navbar'
 
-export const Login = () => {
 
-    const history = useNavigate();
-
-    const [email, setEmail]=useState('');
-    const [password, setPassword]=useState('');
-
-    const [errormsg, setErrorMsg]=useState('');
-    const [successmsg, setSuccessMsg]=useState('');
-
-    const handleLogin= async (e)=>{
-        e.preventDefault();
-        // console.log(email, password);
-        await signInWithEmailAndPassword(auth, email,password).then(()=>{
-            setSuccessMsg('Ingreso exitoso, seras redirigido a la pagina principal');
-            setEmail('');
-            setPassword('');
-            setErrorMsg('');
-            setTimeout(()=>{
-                setSuccessMsg('');
-                history('/');
-            },3000)
-        }).catch(error=>setErrorMsg(error.message));
-    }
+    export const Login = (user) => {
+        const {
+          email,
+          password,
+          errorMsg,
+          successMsg,
+          setEmail,
+          setPassword,
+          handleLogin,
+        } = Authentication();
+    
 
     
     return (
+        <>
+        <Navbar user={user} />
         <div className='container'>
+        
         <Form onSubmit={handleLogin}>
         <br /><br />
         <h1>Ingreso</h1>
         <br />
         <hr />
-        {successmsg&&<>
-            <div className="success-msg">{successmsg}</div>
+        {successMsg&&<>
+            <div className="success-msg">{successMsg}</div>
         </>}
         
         <br />
@@ -55,15 +45,17 @@ export const Login = () => {
         <div className='btn-box'>
             <span>Si no tienes una cuenta has click
             <Link to="/signup" className='link'> Aqui </Link>para registrarte</span>
-            <button type="submit" className='btn btn-success btn-md'>Ingresar</button>
+            <button type="submit" className='btn btn-danger btn-md'>Ingresar</button>
         </div>
     </Form>
-          {errormsg&&<>
+          {errorMsg&&<>
               <br></br>
-              <div className='error-msg'>{errormsg}</div>                
+              <div className='error-msg'>{errorMsg}</div>                
           </>}
   </div>
+  </>
     )
+    
 }
         
 

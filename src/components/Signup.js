@@ -1,79 +1,23 @@
-import React,{ useState } from 'react'
-import { auth } from '../Firebase/Firebase'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { fs } from '../Firebase/Firebase';
-import { doc, setDoc } from 'firebase/firestore';
 import Form from 'react-bootstrap/Form';
+import { Authentication } from './Authentication';
+import { Navbar } from './Navbar/Navbar'
 
-
-export const Signup = () => {
-
-    const history = useNavigate();
-
-    const [email, setEmail]=useState('');
-    const [password, setPassword]=useState('');
-
-    const [errormsg, setErrormsg]=useState('');
-    const [successmsg, setSuccessmsg]=useState('');
+export const Signup = (user) => {
+  const {
+    email,
+    password,
+    errormsg,
+    successmsg,
+    setEmail,
+    setPassword,
+    handleSignup,
+  } = Authentication();
     
-    const addUserToFirestore = async (userId, email, role) => {
-      const userRef = doc(fs, 'users', userId);
-    
-      try {
-        await setDoc(userRef, {
-          email, 
-          role
- 
-        });
-    
-        console.log('Usuario añadido a Firestore.');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const handleSignup= async (e) => {
-      e.preventDefault();
-        
-      const userRole = 'user'
-        //createUserWithEmailAndPassword(auth,fullName.value,email.value,password.value);
-      await createUserWithEmailAndPassword(auth, email, password).then(async (userCredential)=>{
-      const user = userCredential.user;
-      const userId = user.uid;
-
-    // Add user data to Firestore
-         
-          setSuccessmsg('Te has registrado correctamente, seras re-dirigido al inicio de sesion');
-          setEmail('');
-          setPassword('');
-          setErrormsg('');
-          setTimeout(()=>{
-          setSuccessmsg('');
-          history('/login');
-          },3000)
-            try {
-          await addUserToFirestore(userId, email, userRole);
-          console.log('User registered successfully and added to Firestore.');
-        } catch (error) {
-          console.error('Registration error:', error.message);
-        }
-         
-      }).catch ((error)=>{
-        if (error.code === "auth/email-already-in-use") {
-        setErrormsg('Este email ya ha sido utilizado anteriormente');
-        } else if (error.code === "auth/weak-password") {
-        setErrormsg('Su contraseña es demasiado debil')
-        }
-        
-      });
-        
-    };
-
-
-
     return (
+      <>
+      <Navbar user={user} />
       <div className='container'>
       <Form onSubmit={handleSignup}>
           <br /><br />
@@ -97,7 +41,7 @@ export const Signup = () => {
           <div className='btn-box'>
               <span>Si ya tienes una cuenta has click
               <Link to="/login" className='link'> Aqui</Link></span>
-              <button type="submit" className='btn btn-success btn-md'>Registrar</button>
+              <button type="submit" className='btn btn-danger btn-md'>Registrar</button>
           </div>
       </Form>
             {errormsg&&<>
@@ -105,6 +49,7 @@ export const Signup = () => {
                 <div className='error-msg'>{errormsg}</div>                
             </>}
     </div>
+    </>
     )
 }
 

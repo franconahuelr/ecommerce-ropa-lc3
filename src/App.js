@@ -5,8 +5,14 @@ import { Login } from './components/Login'
 import { Signup } from './components/Signup'
 import { NotFound } from './components/NotFound'
 import { AddProducts } from './components/AddProducts/AddProducts'
+import { Cart } from './components/Cart/Cart'
+//import { Authentication } from './components/Authentication'
+
 
 export const App = () => {
+
+ // const { checkUserRole } = Authentication();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -14,6 +20,7 @@ export const App = () => {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/addProducts" element={<AddProducts/>}/>
+        <Route path='/cart' element={<Cart/>}/>
         <Route element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>

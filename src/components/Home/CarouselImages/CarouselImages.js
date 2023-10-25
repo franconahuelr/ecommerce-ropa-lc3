@@ -11,26 +11,28 @@ export const CarouselImages = () => {
             <Carousel.Item>
               <img
                 className="d-block m-auto"
-                src="https://acdn.mitiendanube.com/stores/001/029/315/products/pizza-time1-dfc67727b9474296dd16747890035712-640-0.webp"
-                alt="Segunda imagen"
+                src="https://http2.mlstatic.com/D_795968-MLA44953308983_022021-O.jpg"
+                alt="BUZOS"
+                style={{ maxWidth: '100%', maxHeight: '400px' }}
               
                 
               />
               <Carousel.Caption>
-                <h3>Slide 2 Title</h3>
-                <p>Slide 2 Description</p>
+                <h3>BUZOS</h3>
+                <p>Diseños Unicos!</p>
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
               <img
                 className="d-block m-auto"
-                src="https://acdn.mitiendanube.com/stores/001/029/315/products/chimichangas-free1-3c3c851975132757e216769174584434-640-0.webp"
-                alt="Tercera imagen"
+                src="https://acdn.mitiendanube.com/stores/115/314/products/larusso-blanco1-f86e863e4c0722b89e16032068993851-480-0.png"
+                alt="REMERAS"
+                style={{ maxWidth: '100%', maxHeight: '400px' }}
                
               />
               <Carousel.Caption>
-                <h3>Slide 3 Title</h3>
-                <p>Slide 3 Description</p>
+                <h3>REMERAS</h3>
+                <p>De tus series, peliculas y juegos favoritos</p>
               </Carousel.Caption>
             </Carousel.Item>
           </Carousel>

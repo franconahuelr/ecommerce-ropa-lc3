@@ -18,17 +18,24 @@ export const AddProducts = () => {
   const types = ['image/jpg', 'image/jpeg', 'image/png', 'image/PNG'];
 
   const handleProductImg = (e) => {
-    let selectedFile = e.target.files[0];
-    if (selectedFile) {
-      if (selectedFile && types.includes(selectedFile.type)) {
-        setImage(selectedFile);
-        setImageError('');
+    const inputType = e.target.type;
+    if (inputType === 'file') {
+      const selectedFile = e.target.files[0];
+      if (selectedFile) {
+        if (selectedFile && types.includes(selectedFile.type)) {
+          setImage(selectedFile);
+          setImageError('');
+        } else {
+          setImage(null);
+          setImageError('Please select a valid image file type (png or jpg)');
+        }
       } else {
-        setImage(null);
-        setImageError('Please select a valid image file type (png or jpg)');
+        console.log('Please select your file');
       }
-    } else {
-      console.log('Please select your file');
+    } else if (inputType === 'text') {
+      const imageUrl = e.target.value;
+      setImage(imageUrl);
+      setImageError('');
     }
   };
 
@@ -37,15 +44,24 @@ export const AddProducts = () => {
     const storageRef = ref(storage, `product-images/${image.name}`);
 
     try {
-      await uploadBytes(storageRef, image);
-      const imageUrl = await getDownloadURL(storageRef);
-
-      await addDoc(collection(fs, 'Products'), {
-        title,
-        description,
-        price: Number(price),
-        url: imageUrl,
-      });
+      if (image instanceof File) {
+        await uploadBytes(storageRef, image);
+        const imageUrl = await getDownloadURL(storageRef);
+        await addDoc(collection(fs, 'Products'), {
+          title,
+          description,
+          price: Number(price),
+          url: imageUrl,
+        });
+      } else {
+        // The user provided a URL
+        await addDoc(collection(fs, 'Products'), {
+          title,
+          description,
+          price: Number(price),
+          url: image,
+        });
+      }
 
       setSuccessMsg('Product added successfully');
       setTitle('');
@@ -61,7 +77,6 @@ export const AddProducts = () => {
       setUploadError(error.message);
     }
   };
-
   return (
     <div className='container'>
       <br></br>
@@ -103,7 +118,12 @@ export const AddProducts = () => {
         ></input>
         <br></br>
         <label>Upload Product Image</label>
-        <input type='file' id='file' className='form-control' required onChange={handleProductImg}></input>
+        <input type='file' id='file' className='form-control' onChange={handleProductImg}></input>
+        <label>Or</label>
+        <input type="text" placeholder="Enter Image URL" className="form-control" onChange={handleProductImg} />
+        <div>
+        {image && <img src={image} alt="Product" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
+        </div>
 
         {imageError && (
           <>

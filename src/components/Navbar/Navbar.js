@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../Images/logo.png';
+import logo from './../../Images/logo.png'
 import { Icon } from 'react-icons-kit';
 import { shoppingCart } from 'react-icons-kit/feather/shoppingCart';
-import { auth } from '../Firebase/Firebase';
+import { auth } from '../../Firebase/Firebase';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
+import './Navbar.css';
 
 export const Navbar = ({ user }) => {
+  
   const history = useNavigate();
 
   const handleLogout = () => {
@@ -24,7 +26,8 @@ export const Navbar = ({ user }) => {
     <div className='navbar'>
       <div className='leftside'>
         <div className='logo'>
-          <img src={logo} alt='logo' />
+          <Link to='/'><img src={logo} alt='logo' /></Link>
+          
         </div>
       </div>
       <div className='rightside'>
@@ -43,24 +46,33 @@ export const Navbar = ({ user }) => {
           </>
         ) : (
           <>
-            
-            <div className='cart-menu-btn'>
+            {user.role === 'user' && (<>
+              <div className='cart-menu-btn'>
               <Link className='navlink' to='/cart'>
                 <Icon icon={shoppingCart} size={20} />
               </Link>
               {/* <span className='cart-indicator'>{totalQty}</span> */}
+              
+              <div className='btn btn-danger btn-md' onClick={handleLogout}>
+              Salir
+              </div>
             </div>
+             </>)}
+           
             {user.role === 'admin' && (
               <div>
                 <Link className='navlink' to='/addProducts'>
                   Agregar Productos
                 </Link>
-              </div>
-            )}
-            <div className='btn btn-danger btn-md' onClick={handleLogout}>
+                <div className='btn btn-danger btn-md' onClick={handleLogout}>
               Salir
             </div>
-          </>
+              </div>
+            )}
+       
+  
+            </>
+        
         )}
       </div>
     </div>
