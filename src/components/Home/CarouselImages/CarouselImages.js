@@ -35,6 +35,20 @@ export const CarouselImages = () => {
                 <p>De tus series, peliculas y juegos favoritos</p>
               </Carousel.Caption>
             </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block m-auto"
+                src="https://img.joomcdn.net/42f8365c600ad6a430d6bd362e4424f1678cef32_original.jpeg"
+                alt="SHORTS"
+                style={{ maxWidth: '100%', maxHeight: '400px' }}
+              
+                
+              />
+              <Carousel.Caption>
+                <h3>SHORTS</h3>
+                <p>Personalizados!</p>
+              </Carousel.Caption>
+            </Carousel.Item>
           </Carousel>
         </div>
       );

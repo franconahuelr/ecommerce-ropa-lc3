@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import './Navbar.css';
 
-export const Navbar = ({ user }) => {
+export const Navbar = ({ user, totalProducts }) => {
   
   const history = useNavigate();
 
@@ -27,7 +27,15 @@ export const Navbar = ({ user }) => {
       <div className='leftside'>
         <div className='logo'>
           <Link to='/'><img src={logo} alt='logo' /></Link>
-          
+        </div>
+        <div>
+        <Link className='navlink' to='/faq'>Preguntas Frecuentes</Link>
+        </div>
+        <div>
+          <Link className='navlink' to='/sizes'>Tabla de Talles</Link>
+        </div>
+        <div>
+          <Link className='navlink' to='/contact'>Contacto</Link>
         </div>
       </div>
       <div className='rightside'>
@@ -51,12 +59,11 @@ export const Navbar = ({ user }) => {
               <Link className='navlink' to='/cart'>
                 <Icon icon={shoppingCart} size={20} />
               </Link>
-              {/* <span className='cart-indicator'>{totalQty}</span> */}
-              
-              <div className='btn btn-danger btn-md' onClick={handleLogout}>
+              <span className='cart-indicator'>{totalProducts}</span>
+            </div>
+            <div className='btn btn-danger btn-md' onClick={handleLogout}>
               Salir
               </div>
-            </div>
              </>)}
            
             {user.role === 'admin' && (
@@ -68,11 +75,8 @@ export const Navbar = ({ user }) => {
               Salir
             </div>
               </div>
-            )}
-       
-  
-            </>
-        
+            )}  
+            </>       
         )}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { IndividualProduct } from './../IndividualProduct/IndividualProduct'
+import { IndividualProduct } from '../IndividualProduct/IndividualProduct'
 
 export const Products = ({products, onDelete, addToCart, userRole}) => {
 

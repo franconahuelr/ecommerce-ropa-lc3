@@ -13,10 +13,10 @@ export function Authentication() {
   const [errorMsg, setErrorMsg]=useState('');
   const [successMsg, setSuccessMsg]=useState('');
   
-    //const checkUserRole = (user) => {
-      // Implement logic to check the user's role based on your data structure
-      //return user ? user.role : null;
-   // };
+  const checkUserRole = (user) => {
+     
+      return user ? user.role : null;
+  };
       const handleSignup= async (e) => {
         e.preventDefault();
         const addUserToFirestore = async (userId, email, role) => {
@@ -96,6 +96,6 @@ export function Authentication() {
     setSuccessmsg,
     handleSignup,
     handleLogin,
-    //checkUserRole
+    checkUserRole
   };
 }

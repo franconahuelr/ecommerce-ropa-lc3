@@ -24,11 +24,11 @@ export const IndividualProduct = ({ individualProduct, onDelete, addToCart, role
       <div className='product-text price'>$ {price}</div>
       {role === 'admin' ? (
         <div className='btn btn-danger btn-md cart-btn' onClick={handleDeleteProduct}>
-          Delete Product
+          Eliminar Producto
         </div>
       ) : (
         <div className='btn btn-primary btn-md cart-btn' onClick={handleAddToCart}>
-          Add to Cart
+          Añadir al Carrito
         </div>
       )}
     </div>

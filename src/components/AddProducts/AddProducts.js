@@ -3,14 +3,14 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { fs } from '../../Firebase/Firebase'
 import { storage } from '../../Firebase/Firebase';
-import './AddProducts.css';
+import { Navbar } from './../Navbar/Navbar'
 
-export const AddProducts = () => {
+export const AddProducts = (user) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
-
+  const [category, setCategory] = useState('');
   const [imageError, setImageError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [uploadError, setUploadError] = useState('');
@@ -52,6 +52,7 @@ export const AddProducts = () => {
           description,
           price: Number(price),
           url: imageUrl,
+          category,
         });
       } else {
         // The user provided a URL
@@ -60,6 +61,7 @@ export const AddProducts = () => {
           description,
           price: Number(price),
           url: image,
+          category,
         });
       }
 
@@ -78,10 +80,13 @@ export const AddProducts = () => {
     }
   };
   return (
+    <>
+    <Navbar user={user} />
     <div className='container'>
+      
       <br></br>
       <br></br>
-      <h1>Add Products</h1>
+      <h1>Agregar Productos</h1>
       <hr></hr>
       {successMsg && (
         <>
@@ -90,7 +95,7 @@ export const AddProducts = () => {
         </>
       )}
       <form autoComplete='off' className='form-group' onSubmit={handleAddProducts}>
-        <label>Product Title</label>
+        <label>Titulo del Producto</label>
         <input
           type='text'
           className='form-control'
@@ -99,7 +104,7 @@ export const AddProducts = () => {
           value={title}
         ></input>
         <br></br>
-        <label>Product Description</label>
+        <label>Descripcion del Producto</label>
         <input
           type='text'
           className='form-control'
@@ -108,7 +113,7 @@ export const AddProducts = () => {
           value={description}
         ></input>
         <br></br>
-        <label>Product Price</label>
+        <label>Precio del Producto</label>
         <input
           type='number'
           className='form-control'
@@ -116,10 +121,24 @@ export const AddProducts = () => {
           onChange={(e) => setPrice(e.target.value)}
           value={price}
         ></input>
+        <br />
+        <label>Categoria</label>
+          <select
+            className="form-control"
+            required
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Selecciona una Categoria</option>
+            <option value="Remeras">Remera</option>
+            <option value="Buzos">Buzo</option>
+            <option value="Shorts">Short</option>
+            
+          </select>
         <br></br>
-        <label>Upload Product Image</label>
+        <label>Subir imagen del producto</label>
         <input type='file' id='file' className='form-control' onChange={handleProductImg}></input>
-        <label>Or</label>
+        <label>O</label>
         <input type="text" placeholder="Enter Image URL" className="form-control" onChange={handleProductImg} />
         <div>
         {image && <img src={image} alt="Product" style={{ maxWidth: '100px', maxHeight: '100px' }} />}
@@ -134,7 +153,7 @@ export const AddProducts = () => {
         <br></br>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <button type='submit' className='btn btn-success btn-md'>
-            SUBMIT
+            Agregar
           </button>
         </div>
       </form>
@@ -145,5 +164,6 @@ export const AddProducts = () => {
         </>
       )}
     </div>
+    </>
   );
 };

@@ -1,134 +1,209 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "../Navbar/Navbar";
-import {Products} from './../Products/Products';
-import {auth, fs} from "../../Firebase/Firebase";
-import {getDoc, doc, getDocs, collection, query, deleteDoc, setDoc} from "firebase/firestore";
+import { Products } from "./../Products/Products";
+import { auth, fs } from "../../Firebase/Firebase";
+import {
+  getDoc,
+  doc,
+  getDocs,
+  collection,
+  deleteDoc,
+  setDoc,
+  query,
+  onSnapshot
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import {CarouselImages} from "./CarouselImages/CarouselImages";
+import { CarouselImages } from "./CarouselImages/CarouselImages";
 import { useNavigate } from "react-router-dom";
+import { IndividualFilteredProduct } from "../IndividualFilteredProduct";
+import './Home.css'
+import Footer from "../Footer/Footer";
 
 export const Home = () => {
-
   const history = useNavigate();
 
-  function GetUserUid() {
-    const [uid, setUid] = useState(null);
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setUid(user.uid);
-        }
-      });
-      return unsubscribe;
-    }, []);
-    return uid;
-  }
-  const uid = GetUserUid();
-
+  const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  // Getting the current user function
-  function GetCurrentUser() {
-    const [user, setUser] = useState(null);
+  const [uid, setUid] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [active, setActive] = useState("");
+  const [category, setCategory] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const spans = [
+    { id: "Remeras", text: "Remeras" },
+    { id: "Buzos", text: "Buzos" },
+    { id: "Shorts", text: "Shorts" },
+  ];
 
-    useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-        if (authUser) {
-          const userRef = doc(fs, 'users', authUser.uid);
-          getDoc(userRef)
-            .then((snapshot) => {
-              if (snapshot.exists()) {
-                const userData = snapshot.data();
-                setUser({ email: userData.email, role: userData.role });
-                setUserRole(userData.role)
-              } else {
-                setUser(null);
-              }
-            })
-            .catch((error) => {
-              console.error('Error getting user document:', error);
-            });
-        } else {
-          setUser(null);
-          setUserRole(null);
-        }
+  useEffect(() => {
+    const unsubscribeUser = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const userRef = doc(fs, "users", authUser.uid);
+        getDoc(userRef)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const userData = snapshot.data();
+              setUser({ email: userData.email, role: userData.role });
+              setUserRole(userData.role);
+            }
+          })
+          .catch((error) => {
+            console.error("Error getting user document:", error);
+          });
+
+        setUid(authUser.uid);
+      } else {
+        setUser(null);
+        setUserRole(null);
+        setUid(null);
+      }
+    });
+
+    const productsQuery = query(collection(fs, "Products"));
+    getDocs(productsQuery)
+      .then((productsSnapshot) => {
+        const productsArray = [];
+        productsSnapshot.forEach((doc) => {
+          productsArray.push({ ID: doc.id, ...doc.data() });
+        });
+        setProducts(productsArray);
+      })
+      .catch((error) => {
+        console.error("Error getting products:", error);
       });
 
-      // Cleanup function
-      return () => unsubscribe();
-    }, []);
+    if (uid) {
+      const cartRef = collection(fs, `Cart ${uid}`);
+      const unsubscribeCart = onSnapshot(cartRef, (snapshot) => {
+        const qty = snapshot.size;
+        setTotalProducts(qty);
+      });
+      return unsubscribeCart;
+    }
 
-    return user;
-  }
+    return unsubscribeUser;
+  }, [uid]);
 
-  const user = GetCurrentUser();
-  console.log(userRole);
+  const addToCart = (product) => {
+    if (uid) {
+      const newProduct = {
+        ...product,
+        qty: 1,
+        TotalProductPrice: product.qty * product.price,
+      };
+      const cartRef = collection(fs, `Cart ${uid}`);
+      const cartDoc = doc(cartRef, product.ID);
 
-
-  const [products, setProducts] = useState([]);
-
-  const getProducts = async () => {
-    const productsQuery = query(collection(fs, 'Products'));
-    const productsSnapshot = await getDocs(productsQuery);
-
-    const productsArray = productsSnapshot.docs.map((doc) => ({
-      ID: doc.id,
-      ...doc.data(),
-    }));
-
-    setProducts(productsArray);
+      setDoc(cartDoc, newProduct)
+        .then(() => {
+          console.log("Successfully added to cart");
+        })
+        .catch((error) => {
+          console.error("Error adding to cart: ", error);
+        });
+    } else {
+      history("/login");
+    }
   };
 
   const handleDeleteProduct = async (productId) => {
     try {
-      // Delete the product from Firestore by its ID
-      await deleteDoc(doc(fs, 'Products', productId));
-
-      // Update the product list by filtering out the deleted product
-      setProducts((prevProducts) => prevProducts.filter((product) => product.ID !== productId));
+      await deleteDoc(doc(fs, "Products", productId));
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.ID !== productId)
+      );
     } catch (error) {
-      console.error('Error deleting product:', error);
+      console.error("Error deleting product:", error);
     }
   };
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  const handleChange = (individualSpan) => {
+    console.log("Categoria", individualSpan.id)
+    setActive(individualSpan.id);
+    setCategory(individualSpan.text);
+    filterFunction(individualSpan.text);
+  };
 
-  const addToCart = (product) => {
-    if (uid !== null) {
-      const Product = { ...product, qty: 1, TotalProductPrice: product.qty * product.price };
-      const cartRef = collection(fs, `Cart ${uid}`);
-      const cartDoc = doc(cartRef, product.ID);
-  
-      setDoc(cartDoc, Product)
-        .then(() => {
-          console.log('Successfully added to cart');
-        })
-        .catch((error) => {
-          console.error('Error adding to cart: ', error);
-        });
-  } else {
-    history('/login');
+  const filterFunction = (text) => {
+    if (products.length > 1) {
+      const filter = products.filter((product) => product.category === text);
+      setFilteredProducts(filter);
+    } else {
+      console.log("no products to filter");
     }
   };
+
+  const returntoAllProducts = () => {
+    setActive("");
+    setCategory("");
+    setFilteredProducts([]);
+  };
+
   return (
     <>
-      <Navbar user={user} />
-      <CarouselImages />
-      <br />
-      {products.length > 0 ? (
-        <div className="container-fluid">
-          <h1 className="text-center">Products</h1>
-          <div className="products-box">
-            <Products products={products} onDelete={handleDeleteProduct} addToCart={addToCart} userRole={userRole} />
-          </div>
-        </div>
-      ) : (
-        <div className="container-fluid">Por favor espere...</div>
-      )}
+        <Navbar user={user} totalProducts={totalProducts}/>
+        <CarouselImages />           
+        <br></br>
+        <div className='container-fluid filter-products-main-box'>
+            <div className='filter-box'>
+                <h6>Categorias</h6>
+                {spans.map((individualSpan,index)=>(
+                    <span key={index} id={individualSpan.id}
+                    onClick={()=>handleChange(individualSpan)}
+                    className={individualSpan.id===active ? active:'deactive'}>{individualSpan.text}</span>
+                ))}
+            </div>
+            {filteredProducts.length > 0&&(
+              <div className='my-products'>
+                  <h1 className='text-center'>{category}</h1>
+                  <a
+                    href="#"
+                    onClick={returntoAllProducts}
+                    style={{
+                      textDecoration: 'none',
+                      color: 'red',
+                      fontWeight: 'bold',
+                      fontSize: '20px',
+                      transition: 'color 0.3s',                   
+                  }}
+                  >
+                    Mostrar todos los Productos
+                  </a>
+                  <div className='products-box'>
+                      {filteredProducts.map(individualFilteredProduct=>(
+                          <IndividualFilteredProduct
+                          key={individualFilteredProduct.ID}
+                          individualFilteredProduct={individualFilteredProduct}
+                          addToCart={addToCart}
+                          onDelete={handleDeleteProduct}
+                          userRole={userRole}
+                          />
+                      ))}
+                  </div>
+              </div>  
+            )}
+            {filteredProducts.length < 1&&(
+                <>
+                    {products.length > 0&&(
+                      
+                        <div className='my-products'>
+                          
+                            <h1 className='text-center'>Todos los Productos</h1>
+                            
+                            <div className='products-box'>
+                                
+                                <Products products={products} addToCart={addToCart} onDelete={handleDeleteProduct} userRole={userRole}/>
+                            </div>
+                        </div>
+                    )}
+                    {products.length < 1&&(
+                        <div className='my-products please-wait'>Por favor espere...</div>
+                    )}
+                </>
+            )}
+        </div>      
+        <Footer/> 
     </>
-  );
+)
 };
-
-export default Home;
