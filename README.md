@@ -1,8 +1,13 @@
-# Ajustes por hacer a partir del 8vo commit
--Ordenar los componentes y dividir mejor por roles el codigo en general
--Agregar validaciones a cada formulario
--Ajustar un poco los estilos
--Crear rutas seguras
+# Ajustes por hacer a partir del 8vo commit  
+
+-Ordenar los componentes y dividir mejor por roles el codigo en general  
+
+-Agregar validaciones a cada formulario  
+
+-Ajustar un poco los estilos  
+
+-Crear rutas seguras  
+
 -Añadir mas funcionalidades a la cuenta de admin
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
