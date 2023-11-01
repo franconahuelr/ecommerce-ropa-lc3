@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './IndividualProduct.css';
 
 export const IndividualProduct = ({ individualProduct, onDelete, addToCart, role }) => {
@@ -12,7 +12,13 @@ export const IndividualProduct = ({ individualProduct, onDelete, addToCart, role
 
   const handleAddToCart =()=>{
     addToCart(individualProduct);
+    setSuccessMsg(true);
+    setTimeout(()=>{
+      setSuccessMsg(false);
+      },2000)
   }
+
+  const [successMsg, setSuccessMsg]=useState(false);
 
   return (
     <div className='product'>
@@ -31,6 +37,9 @@ export const IndividualProduct = ({ individualProduct, onDelete, addToCart, role
           Añadir al Carrito
         </div>
       )}
+        {successMsg&&<>
+            <div className="success-msg">Añadido al Carrito</div>
+        </>}
     </div>
   );
 };

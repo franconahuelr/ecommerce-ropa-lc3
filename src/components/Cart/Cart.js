@@ -3,9 +3,10 @@ import { Navbar } from '../Navbar/Navbar';
 import { auth, fs } from '../../Firebase/Firebase'
 import { CartProducts } from '../CartProducts/CartProducts';
 import StripeCheckout from 'react-stripe-checkout';
-import { collection, doc, onSnapshot, updateDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import {Footer} from '../Footer/Footer' 
+import {Footer} from '../Footer/Footer'; 
+import { useUser } from '../Context/userContext';
 import './Cart.css'
 
 export const Cart = () => {
@@ -14,39 +15,7 @@ export const Cart = () => {
     const [totalQty, setTotalQty] = useState(0);
     const [totalPrice, setTotalPrice] = useState(0);
 
-    function GetCurrentUser() {
-        const [user, setUser] = useState(null);
-        useEffect(() => {
-            const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-                if (authUser) {
-                    const userRef = doc(fs, 'users', authUser.uid);
-                    getDoc(userRef)
-                        .then((snapshot) => {
-                            if (snapshot.exists()) {
-                                const userData = snapshot.data();
-                                setUser({ email: userData.email, role: userData.role });
-                                setUserRole(userData.role);
-                            } else {
-                                setUser(null);
-                                setUserRole(null);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Error getting user document:', error);
-                        });
-                } else {
-                    setUser(null);
-                    setUserRole(null);
-                }
-            });
-
-            return () => unsubscribe();
-        }, []);
-
-        return user;
-    }
-
-    const user = GetCurrentUser();
+    const user = useUser();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -153,7 +122,10 @@ export const Cart = () => {
           const unsubscribe = onSnapshot(cartRef, (snapshot) => {
             const qty = snapshot.size;
             setTotalProducts(qty);
+            const ls = window.localStorage
+            ls.setItem('cartNumber', qty);
           });
+
 
           return unsubscribe; // Cleanup the listener
         }
@@ -163,7 +135,7 @@ export const Cart = () => {
 
     return (
         <>
-            <Navbar user={user} totalProducts={totalProducts}/>
+            <Navbar user={user}/>
 
             <br />
             {userRole === 'admin' ? (

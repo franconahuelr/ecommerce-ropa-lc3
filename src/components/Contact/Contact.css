@@ -3,11 +3,11 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    margin: 0 auto;
-    text-align: center;
+    width: 70%;
+    margin: 20px;
+    text-align: left;
   }
-  
+
   .contact-header {
     font-size: 28px;
     color: #333;

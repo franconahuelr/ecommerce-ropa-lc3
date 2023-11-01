@@ -2,8 +2,12 @@ import React from 'react';
 import './Sizes.css'
 import {Navbar} from './../Navbar/Navbar'
 import {Footer} from '../Footer/Footer'
+import { useUser } from '../Context/userContext';
 
-export function Sizes(user) {
+export function Sizes() {
+
+  const user = useUser();
+
   return (
     <>
     <Navbar user={user}/>

@@ -9,14 +9,13 @@ import { Cart } from './components/Cart/Cart'
 import {FrecuentsQuestions} from './components/FrecuentsQuestions'
 import { Sizes } from './components/Sizes/Sizes'
 import {Contact} from './components/Contact/Contact'
-//import { Authentication } from './components/Authentication'
-
+import { UserProvider } from './components/Context/userContext'
 
 export const App = () => {
 
- // const { checkUserRole } = Authentication();
-
   return (
+    <>
+   <UserProvider>
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element = {<Home/>}/>
@@ -29,7 +28,9 @@ export const App = () => {
         <Route path='/contact' element={<Contact/>}/>
         <Route element={<NotFound/>}/>
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </UserProvider>
+    </>
   )
 }
 

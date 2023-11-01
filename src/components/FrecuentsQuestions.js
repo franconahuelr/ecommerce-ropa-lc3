@@ -1,7 +1,9 @@
 import React from 'react';
 import {Navbar} from './Navbar/Navbar';
 import {Footer} from './Footer/Footer'
-export const FrecuentsQuestions = (user) => {
+import { useUser } from './../components/Context/userContext'
+
+export const FrecuentsQuestions = () => {
 
   const faqStyles = {
     backgroundColor: '#f7f7f7',
@@ -31,10 +33,11 @@ export const FrecuentsQuestions = (user) => {
     color: '#555',
   };
 
+  const user = useUser();
 
   return (
     <>
-    <Navbar user={user} />
+    <Navbar  user={user}/>
     <section style={faqStyles}>     
       <div className="containerFaq" style={containerStyles}>
       <h2 style={{ fontSize: '36px', textAlign: 'center', marginBottom: '50px'}}>Preguntas Frecuentes</h2>

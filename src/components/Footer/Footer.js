@@ -14,7 +14,7 @@ export const Footer = () => {
         <div className="column">
           <h3>Sobre Nosotros</h3>
           <p>
-            Somos una tienda independiente especializada en ropa personalizada <br /> sobre el mundo Geek!
+            Somos una tienda independiente <br /> especializada en ropa personalizada <br /> sobre el mundo Geek!
           </p>
           <div className='social-media'>
             <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">

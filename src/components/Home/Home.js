@@ -81,7 +81,6 @@ export const Home = () => {
       });
       return unsubscribeCart;
     }
-
     return unsubscribeUser;
   }, [uid]);
 
@@ -142,7 +141,7 @@ export const Home = () => {
 
   return (
     <>
-        <Navbar user={user} totalProducts={totalProducts}/>
+        <Navbar user={user} />
         <CarouselImages />           
         <br></br>
         <div className='container-fluid filter-products-main-box'>
