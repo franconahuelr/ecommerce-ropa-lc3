@@ -3,9 +3,13 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { fs } from '../../Firebase/Firebase'
 import { storage } from '../../Firebase/Firebase';
-import { Navbar } from './../Navbar/Navbar'
+import { Navbar } from './../Navbar/Navbar';
+import { useUser } from '../Context/userContext';
 
-export const AddProducts = (user) => {
+export const AddProducts = () => {
+
+  const user = useUser();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -27,10 +31,10 @@ export const AddProducts = (user) => {
           setImageError('');
         } else {
           setImage(null);
-          setImageError('Please select a valid image file type (png or jpg)');
+          setImageError('Selecciona un valor de imagen valido, png or jpg');
         }
       } else {
-        console.log('Please select your file');
+        //console.log('Please select your file');
       }
     } else if (inputType === 'text') {
       const imageUrl = e.target.value;
@@ -65,7 +69,7 @@ export const AddProducts = (user) => {
         });
       }
 
-      setSuccessMsg('Product added successfully');
+      setSuccessMsg('Producto añadido con exito');
       setTitle('');
       setDescription('');
       setPrice('');
@@ -152,7 +156,7 @@ export const AddProducts = (user) => {
         )}
         <br></br>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button type='submit' className='btn btn-success btn-md'>
+          <button type='submit' className='btn btn-danger btn-md'>
             Agregar
           </button>
         </div>

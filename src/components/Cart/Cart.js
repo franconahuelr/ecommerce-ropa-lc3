@@ -3,9 +3,9 @@ import { Navbar } from '../Navbar/Navbar';
 import { auth, fs } from '../../Firebase/Firebase'
 import { CartProducts } from '../CartProducts/CartProducts';
 import StripeCheckout from 'react-stripe-checkout';
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc} from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import {Footer} from '../Footer/Footer'; 
+import {Footer} from '../Footer/Footer' 
 import { useUser } from '../Context/userContext';
 import './Cart.css'
 
@@ -16,7 +16,7 @@ export const Cart = () => {
     const [totalPrice, setTotalPrice] = useState(0);
 
     const user = useUser();
-
+    //console.log(user)
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -122,10 +122,7 @@ export const Cart = () => {
           const unsubscribe = onSnapshot(cartRef, (snapshot) => {
             const qty = snapshot.size;
             setTotalProducts(qty);
-            const ls = window.localStorage
-            ls.setItem('cartNumber', qty);
           });
-
 
           return unsubscribe; // Cleanup the listener
         }
@@ -135,7 +132,7 @@ export const Cart = () => {
 
     return (
         <>
-            <Navbar user={user}/>
+            <Navbar user={user} totalProducts={totalProducts}/>
 
             <br />
             {userRole === 'admin' ? (
