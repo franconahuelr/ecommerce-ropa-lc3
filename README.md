@@ -1,3 +1,17 @@
+# Ajustes por hacer a partir del 8vo commit  
+
+-Ordenar los componentes y dividir mejor por roles el codigo en general  
+
+-Agregar validaciones a cada formulario  
+
+-Ajustar un poco los estilos  
+
+-Crear rutas seguras  
+
+-Añadir mas funcionalidades a la cuenta de admin
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
