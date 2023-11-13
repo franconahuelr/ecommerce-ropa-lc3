@@ -14,7 +14,7 @@ import {Navbar } from './Navbar/Navbar'
           setEmail,
           setPassword,
           handleLogin,
-        } = Authentication();
+        } = Authentication(); // Hago uso del custom hook Authentication
     
 
     
