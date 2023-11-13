@@ -19,6 +19,8 @@ export const AddProducts = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [uploadError, setUploadError] = useState('');
 
+//Array de tipos de archivos de imagen permitidos.
+
   const types = ['image/jpg', 'image/jpeg', 'image/png', 'image/PNG'];
 
   const handleProductImg = (e) => {

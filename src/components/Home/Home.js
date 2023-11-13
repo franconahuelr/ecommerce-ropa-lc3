@@ -36,6 +36,8 @@ export const Home = () => {
     { id: "Shorts", text: "Shorts" },
   ];
 
+// Autenticación de usuarios, consulta productos y actualiza información relacionada con el carrito para un usuario autenticado utilizando Firebase.
+
   useEffect(() => {
     const unsubscribeUser = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
@@ -84,6 +86,8 @@ export const Home = () => {
     return unsubscribeUser;
   }, [uid]);
 
+//Handle para agregar productos al carrito
+
   const addToCart = (product) => {
     if (uid) {
       const newProduct = {
@@ -106,6 +110,8 @@ export const Home = () => {
     }
   };
 
+//Handle para eliminar productos
+
   const handleDeleteProduct = async (productId) => {
     try {
       await deleteDoc(doc(fs, "Products", productId));
@@ -116,6 +122,8 @@ export const Home = () => {
       console.error("Error deleting product:", error);
     }
   };
+
+//Handles para el filtrado de productos y su vista
 
   const handleChange = (individualSpan) => {
     console.log("Categoria", individualSpan.id)
